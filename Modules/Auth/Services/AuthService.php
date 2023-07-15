@@ -2,10 +2,13 @@
 
 namespace Modules\Auth\Services;
 
+use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Modules\Auth\Enums\TokenAbility;
 use Modules\Auth\Http\Requests\Admin\GetMyAccountRequest;
 use Modules\Auth\Http\Requests\Admin\LoginRequest;
+use Modules\Auth\Http\Requests\Admin\RefreshTokenRequest;
 use Modules\Base\Services\BaseService;
 use Modules\User\Repositories\User\IUserRepository;
 
@@ -22,9 +25,14 @@ class AuthService extends BaseService implements IAuthService
             'password' => $request->password
         ];
         if (Auth::attempt($credentials)) {
-            $token = Auth::user()->createToken('test')->plainTextToken;
+            $user = Auth::user();
+            $accessToken = $user->createToken('accessToken', [TokenAbility::ACCESS_API->value], Carbon::now()->addMinutes(config('sanctum.expiration')))->plainTextToken;
+            $refreshToken = $user->createToken('refreshToken', [TokenAbility::ISSUE_ACCESS_TOKEN->value], Carbon::now()->addMinutes(config('sanctum.rt_expiration')))->plainTextToken;
             return [
-                'token' => $token
+                'user_info' => $user,
+                'access_token' => $accessToken,
+                'refresh_token' => $refreshToken,
+                'expires_at' => Carbon::now()->addMinutes(config('sanctum.expiration'))->format('Y:m:d H:i:s')
             ];
         }
 
@@ -38,5 +46,13 @@ class AuthService extends BaseService implements IAuthService
             return $user;
         }
         return false;
+    }
+
+    public function refreshToken(RefreshTokenRequest $request)
+    {
+        $newAccessToken = Auth::user()->createToken('accessToken', [TokenAbility::ACCESS_API->value], Carbon::now()->addMinutes(config('sanctum.expiration')))->plainTextToken;
+        return [
+            'access_token' => $newAccessToken
+        ];
     }
 }

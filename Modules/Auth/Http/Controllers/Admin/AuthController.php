@@ -5,6 +5,7 @@ namespace Modules\Auth\Http\Controllers\Admin;
 use Illuminate\Validation\UnauthorizedException;
 use Modules\Auth\Http\Requests\Admin\GetMyAccountRequest;
 use Modules\Auth\Http\Requests\Admin\LoginRequest;
+use Modules\Auth\Http\Requests\Admin\RefreshTokenRequest;
 use Modules\Auth\Services\IAuthService;
 use Modules\Base\Http\Controllers\ApiController;
 
@@ -21,6 +22,12 @@ class AuthController extends ApiController
             return $this->handleResponse($tokenData);
         }
         throw new UnauthorizedException();
+    }
+
+    public function refreshToken(RefreshTokenRequest $request)
+    {
+        $result = $this->authService->refreshToken($request);
+        return $this->handleResponse($result);
     }
 
     public function getMyAccount(GetMyAccountRequest $request)

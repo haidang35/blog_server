@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Auth\Enums\TokenAbility;
 use Modules\Auth\Http\Controllers\Admin\AuthController;
 
 /*
@@ -18,6 +19,7 @@ use Modules\Auth\Http\Controllers\Admin\AuthController;
 Route::prefix('v1/admin/auth')->controller(AuthController::class)->name('v1.admin.auth.')->group(function() {
     Route::post('/login', 'login')->name('login');
     Route::middleware(['auth:sanctum'])->group(function() {
-        Route::get('/myAccount', 'getMyAccount')->name('getMyAccount');
+        Route::get('/my-account', 'getMyAccount')->name('getMyAccount');
+        Route::post('/refresh-token', 'refreshToken')->name('refreshToken')->middleware(['ability:'. TokenAbility::ISSUE_ACCESS_TOKEN->value]);
     });
 });
