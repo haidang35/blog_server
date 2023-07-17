@@ -18,6 +18,9 @@ use Modules\Auth\Http\Controllers\Admin\AuthController;
 
 Route::prefix('v1/admin/auth')->controller(AuthController::class)->name('v1.admin.auth.')->group(function() {
     Route::post('/login', 'login')->name('login');
+    Route::post('/forgot-password', 'forgotPassword')->name('forgotPassword');
+    Route::post('/reset-password', 'resetPassword')->name('resetPassword');
+    Route::post('/reset-password/verify', 'verifyResetPassword')->name('verifyResetPassword');
     Route::middleware(['auth:sanctum'])->group(function() {
         Route::get('/my-account', 'getMyAccount')->name('getMyAccount');
         Route::post('/refresh-token', 'refreshToken')->name('refreshToken')->middleware(['ability:'. TokenAbility::ISSUE_ACCESS_TOKEN->value]);

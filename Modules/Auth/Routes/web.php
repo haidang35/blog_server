@@ -11,6 +11,10 @@
 |
 */
 
-Route::prefix('auth')->group(function() {
-    Route::get('/', 'AuthController@index');
+\Illuminate\Support\Facades\Route::get('/reset-mail', function() {
+   $token = \Illuminate\Support\Facades\DB::table('password_reset_tokens')
+    ->first();
+   return new \Modules\Auth\Emails\SendResetPasswordLink('#', 'nguyenhaidangyq@gmail.com');
 });
+
+
