@@ -3,24 +3,32 @@
 namespace Modules\Auth\Services;
 
 use Carbon\Carbon;
-use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Modules\Auth\Emails\SendResetPasswordLink;
 use Modules\Auth\Enums\TokenAbility;
-use Modules\Auth\Http\Requests\Admin\ForgotPasswordRequest;
-use Modules\Auth\Http\Requests\Admin\GetMyAccountRequest;
-use Modules\Auth\Http\Requests\Admin\LoginRequest;
-use Modules\Auth\Http\Requests\Admin\RefreshTokenRequest;
-use Modules\Auth\Http\Requests\Admin\ResetPasswordRequest;
+use Modules\Auth\Http\Requests\Admin\Auth\ForgotPasswordRequest;
+use Modules\Auth\Http\Requests\Admin\Auth\GetMyAccountRequest;
+use Modules\Auth\Http\Requests\Admin\Auth\LoginRequest;
+use Modules\Auth\Http\Requests\Admin\Auth\RefreshTokenRequest;
+use Modules\Auth\Http\Requests\Admin\Auth\ResetPasswordRequest;
+use Modules\Auth\Http\Requests\Admin\Permission\CreateNewPermissionRequest;
+use Modules\Auth\Http\Requests\Admin\Permission\DeletePermissionRequest;
+use Modules\Auth\Http\Requests\Admin\Permission\GetPermissionListRequest;
+use Modules\Auth\Http\Requests\Admin\Permission\UpdatePermissionRequest;
+use Modules\Auth\Http\Requests\Admin\Role\AssigningPermissionsToRoleRequest;
+use Modules\Auth\Http\Requests\Admin\Role\CreateNewRoleRequest;
+use Modules\Auth\Http\Requests\Admin\Role\GetRoleListRequest;
+use Modules\Auth\Http\Requests\Admin\Role\UpdateRoleRequest;
 use Modules\Base\Services\BaseService;
 use Modules\User\Entities\User;
 use Modules\User\Repositories\User\IUserRepository;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class AuthService extends BaseService implements IAuthService
 {
@@ -144,5 +152,62 @@ class AuthService extends BaseService implements IAuthService
             return Carbon::now()->lessThan($createdAt->addMinutes(config('auth.passwords.users.expire')));
         }
         return false;
+    }
+
+    public function getRoleList(GetRoleListRequest $request)
+    {
+        return Role::all();
+    }
+
+    public function createNewRole(CreateNewRoleRequest $request)
+    {
+        $role = Role::create([ 'name' => $request->name ]);
+        return $role;
+    }
+
+    public function updateRole($id, UpdateRoleRequest $request)
+    {
+        $role = Role::findById($id);
+        $role->update($request->only('name'));
+        return $role;
+    }
+
+    public function deleteRoleById($id)
+    {
+        $role = Role::findById($id);
+        return $role->deleteOrFail();
+    }
+
+    public function getPermissionList(GetPermissionListRequest $request)
+    {
+        return Permission::all();
+    }
+
+    public function createNewPermission(CreateNewPermissionRequest $request)
+    {
+        return Permission::create($request->only('name'));
+    }
+
+    public function deletePermissionById($id)
+    {
+        return Permission::findById($id)->delete();
+    }
+
+    public function updatePermission($id, UpdatePermissionRequest $request)
+    {
+        $permission = Permission::findById($id);
+        $permission->update($request->only('name'));
+        return $permission;
+    }
+
+    public function assigningPermissionsToRole(AssigningPermissionsToRoleRequest $request)
+    {
+        try {
+            $role = Role::findById($request->id);
+            $role->syncPermissions($request->permissions);
+            return true;
+        }catch (\Exception $e) {
+            return false;
+        }
     }
 }

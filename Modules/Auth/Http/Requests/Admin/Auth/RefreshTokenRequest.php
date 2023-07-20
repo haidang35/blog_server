@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Auth\Http\Requests\Admin;
+namespace Modules\Auth\Http\Requests\Admin\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ResetPasswordRequest extends FormRequest
+class RefreshTokenRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,10 +14,6 @@ class ResetPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email|exists:users,email',
-            'token' => 'required|string|min:200|max:200',
-            'password' => 'required|string|min:8',
-            'password_confirmation' => 'required|same:password',
         ];
     }
 

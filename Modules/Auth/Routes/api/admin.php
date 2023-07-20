@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\Auth\Enums\TokenAbility;
 use Modules\Auth\Http\Controllers\Admin\AuthController;
+use Modules\Auth\Http\Controllers\Admin\RoleController;
+use Modules\Auth\Http\Controllers\Admin\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,5 +26,22 @@ Route::prefix('v1/admin/auth')->controller(AuthController::class)->name('v1.admi
     Route::middleware(['auth:sanctum'])->group(function() {
         Route::get('/my-account', 'getMyAccount')->name('getMyAccount');
         Route::post('/refresh-token', 'refreshToken')->name('refreshToken')->middleware(['ability:'. TokenAbility::ISSUE_ACCESS_TOKEN->value]);
+
+        //Role
+        Route::prefix('roles')->name('roles.')->controller(RoleController::class)->group(function() {
+            Route::get('/', 'getList')->name('getList');
+            Route::post('/', 'create')->name('create');
+            Route::delete('/{id}', 'delete')->name('delete');
+            Route::put('/{id}', 'update')->name('update');
+            Route::post('/{id}/permissions', 'assigningPermissionsToRole')->name('assigningPermissionsToRole');
+        });
+
+        //Permission
+        Route::prefix('permissions')->name('permissions.')->controller(PermissionController::class)->group(function() {
+            Route::get('/', 'getList')->name('getList');
+            Route::post('/', 'create')->name('create');
+            Route::delete('/{id}', 'delete')->name('delete');
+            Route::put('/{id}', 'update')->name('update');
+        });
     });
 });

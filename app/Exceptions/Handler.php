@@ -2,9 +2,11 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
 use Illuminate\Validation\UnauthorizedException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -28,11 +30,27 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+
+        $this->renderable(function (\Spatie\Permission\Exceptions\UnauthorizedException $e, $request) {
+            return response()->json([
+                'message' => 'You do not have the required authorization.',
+                'statusCode'  => 403,
+            ]);
+        });
+
     }
 
     public function render($request, Throwable $e)
     {
         if($request->is('api/**')) {
+
+            if ($e instanceof AuthorizationException) {
+                return response()->json([
+                    'message' => "You don't have permissions",
+                    'statusCode' => Response::HTTP_FORBIDDEN
+                ], Response::HTTP_FORBIDDEN);
+            }
+
             if ($e instanceof \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface) {
                 return response()->json([
                     'message' => $e->getMessage(),

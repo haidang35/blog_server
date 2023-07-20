@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Auth\Http\Requests\Admin;
+namespace Modules\Auth\Http\Requests\Admin\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ForgotPasswordRequest extends FormRequest
+class GetMyAccountRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,8 +14,7 @@ class ForgotPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email|exists:users,email',
-            'reset_password_url' => 'required|string'
+            //
         ];
     }
 

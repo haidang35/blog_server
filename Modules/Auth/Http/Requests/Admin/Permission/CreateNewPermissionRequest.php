@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Auth\Http\Requests\Admin;
+namespace Modules\Auth\Http\Requests\Admin\Permission;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class VerifyResetPasswordRequest extends FormRequest
+class CreateNewPermissionRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -13,10 +13,9 @@ class VerifyResetPasswordRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'email' => 'required|email|exists:users,email',
-            'token' => 'required|string|min:200|max:200',
-        ];
+        return array(
+            'name' => 'required|string|unique:permissions,name'
+        );
     }
 
     /**

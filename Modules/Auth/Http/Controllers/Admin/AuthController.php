@@ -3,14 +3,13 @@
 namespace Modules\Auth\Http\Controllers\Admin;
 
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\UnauthorizedException;
-use Modules\Auth\Http\Requests\Admin\ForgotPasswordRequest;
-use Modules\Auth\Http\Requests\Admin\GetMyAccountRequest;
-use Modules\Auth\Http\Requests\Admin\LoginRequest;
-use Modules\Auth\Http\Requests\Admin\RefreshTokenRequest;
-use Modules\Auth\Http\Requests\Admin\ResetPasswordRequest;
-use Modules\Auth\Http\Requests\Admin\VerifyResetPasswordRequest;
+use Modules\Auth\Http\Requests\Admin\Auth\ForgotPasswordRequest;
+use Modules\Auth\Http\Requests\Admin\Auth\GetMyAccountRequest;
+use Modules\Auth\Http\Requests\Admin\Auth\LoginRequest;
+use Modules\Auth\Http\Requests\Admin\Auth\RefreshTokenRequest;
+use Modules\Auth\Http\Requests\Admin\Auth\ResetPasswordRequest;
+use Modules\Auth\Http\Requests\Admin\Auth\VerifyResetPasswordRequest;
 use Modules\Auth\Services\IAuthService;
 use Modules\Base\Http\Controllers\ApiController;
 
