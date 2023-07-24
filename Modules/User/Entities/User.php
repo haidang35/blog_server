@@ -69,4 +69,9 @@ class User extends Authenticatable
 
         return new NewAccessToken($token, $token->getKey().'|'.$plainTextToken);
     }
+
+    protected static function newFactory()
+    {
+        return \Modules\User\Database\factories\UserFactory::new();
+    }
 }

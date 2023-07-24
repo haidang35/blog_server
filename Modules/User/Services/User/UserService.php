@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Modules\Base\Services\BaseService;
 use Modules\User\Http\Requests\Admin\User\CreateUserRequest;
+use Modules\User\Http\Requests\Admin\User\GetUserListRequest;
 use Modules\User\Http\Requests\Admin\User\UpdateUserRequest;
 use Modules\User\Repositories\User\IUserRepository;
 
@@ -15,9 +16,9 @@ class UserService extends BaseService implements IUserService
     {
     }
 
-    public function findAll()
+    public function findAll(GetUserListRequest $request)
     {
-        return $this->userRepository->findAll();
+        return $this->userRepository->findAllWithPagination($request->limit);
     }
 
     public function findById($id)

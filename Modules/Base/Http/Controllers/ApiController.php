@@ -5,6 +5,9 @@ namespace Modules\Base\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
 
+/**
+ *
+ */
 class ApiController extends Controller
 {
     /**

@@ -4,6 +4,7 @@ namespace Modules\User\Http\Controllers\Admin;
 
 use Modules\Base\Http\Controllers\ApiController;
 use Modules\User\Http\Requests\Admin\User\CreateUserRequest;
+use Modules\User\Http\Requests\Admin\User\GetUserListRequest;
 use Modules\User\Http\Requests\Admin\User\UpdateUserRequest;
 use Modules\User\Services\User\IUserService;
 
@@ -13,9 +14,15 @@ class UserController extends ApiController
     {
     }
 
-    public function getList()
+    public function getList(GetUserListRequest $request)
     {
-        $result = $this->userService->findAll();
+        $result = $this->userService->findAll($request);
+        return $this->handleResponse($result);
+    }
+
+    public function getDetails($id)
+    {
+        $result = $this->userService->findById($id);
         return $this->handleResponse($result);
     }
 
@@ -29,5 +36,11 @@ class UserController extends ApiController
     {
         $result = $this->userService->update($request);
         return $this->handleResponse($result);
+    }
+
+    public function delete($id)
+    {
+        $result = $this->userService->deleteById($id);
+        return $this->handleResponse();
     }
 }
