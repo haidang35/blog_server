@@ -33,4 +33,6 @@ interface IBaseRepository
      * @return mixed
      */
     public function deleteById(int $id);
+
+    public function deleteByIds(array $ids);
 }

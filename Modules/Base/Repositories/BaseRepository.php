@@ -59,4 +59,14 @@ class BaseRepository implements IBaseRepository
     {
         $this->modal->findOrFail($id)->delete();
     }
+
+    public function deleteByIds(array $ids)
+    {
+        try {
+            $this->modal->whereIn('id', $ids)->delete();
+            return true;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

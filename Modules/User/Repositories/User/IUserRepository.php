@@ -6,5 +6,12 @@ use Modules\Base\Repositories\IBaseRepository;
 
 interface IUserRepository extends IBaseRepository
 {
-    public function findAllWithPagination($limit);
+    /**
+     * @param int $limit
+     * @param array $filter
+     * @param array $sort
+     * @return mixed
+     */
+    public function findAllWithPagination(int $limit, array $filter, array $sort);
+
 }

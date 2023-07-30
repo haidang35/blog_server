@@ -30,8 +30,8 @@ class UpdateUserRequest extends FormRequest
                 Rule::unique('users', 'email')
                     ->ignore(request()->get('id'))
             ],
-            'password' => 'required|string|min:8',
-            'password_confirmation' => 'required|same:password',
+            'password' => 'nullable|string|min:8',
+            'password_confirmation' => 'nullable|same:password',
             'roles' => 'nullable|array',
             'roles.*' => 'required|string|exists:roles,name',
             'permissions' => 'nullable|array',

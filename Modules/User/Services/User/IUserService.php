@@ -17,4 +17,5 @@ interface IUserService
     public function update(UpdateUserRequest $request);
 
     public function deleteById($id);
+    public function deleteByIds($ids);
 }

@@ -18,12 +18,20 @@ class UserService extends BaseService implements IUserService
 
     public function findAll(GetUserListRequest $request)
     {
-        return $this->userRepository->findAllWithPagination($request->limit);
+        return $this->userRepository->findAllWithPagination(
+            $request->limit,
+            $request->filter ?? [],
+            $request->sort ?? []
+        );
     }
 
     public function findById($id)
     {
-        return $this->userRepository->findById($id);
+        $user = $this->userRepository->findById($id);
+        $data = $user->toArray();
+        $data['permissions'] = $user->getPermissionNames();
+        $data['roles'] = $user->getRoleNames();
+        return $data;
     }
 
     public function create(CreateUserRequest $request)
@@ -39,7 +47,7 @@ class UserService extends BaseService implements IUserService
             $user->syncPermissions($request->permissions);
             DB::commit();
             return $user;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return false;
         }
@@ -53,15 +61,18 @@ class UserService extends BaseService implements IUserService
             $user->update([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password)
             ]);
+            if($request->password) {
+                $user->update([
+                    'password' => Hash::make($request->password)
+                ]);
+            }
             $user->syncRoles($request->roles);
             $user->syncPermissions($request->permissions);
             DB::commit();
             return $user;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
             return false;
         }
     }
@@ -69,5 +80,10 @@ class UserService extends BaseService implements IUserService
     public function deleteById($id)
     {
         return $this->userRepository->deleteById($id);
+    }
+
+    public function deleteByIds($ids)
+    {
+       return $this->userRepository->deleteByIds($ids);
     }
 }

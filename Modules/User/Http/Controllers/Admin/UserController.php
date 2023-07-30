@@ -4,6 +4,7 @@ namespace Modules\User\Http\Controllers\Admin;
 
 use Modules\Base\Http\Controllers\ApiController;
 use Modules\User\Http\Requests\Admin\User\CreateUserRequest;
+use Modules\User\Http\Requests\Admin\User\DeleteUsersRequest;
 use Modules\User\Http\Requests\Admin\User\GetUserListRequest;
 use Modules\User\Http\Requests\Admin\User\UpdateUserRequest;
 use Modules\User\Services\User\IUserService;
@@ -42,5 +43,11 @@ class UserController extends ApiController
     {
         $result = $this->userService->deleteById($id);
         return $this->handleResponse();
+    }
+
+    public function deleteByIds(DeleteUsersRequest $request)
+    {
+        $result = $this->userService->deleteByIds($request->ids);
+        return $this->handleResponse($result);
     }
 }

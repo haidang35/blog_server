@@ -3,6 +3,8 @@
 namespace Modules\User\Http\Requests\Admin\User;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
+use Modules\Base\Enums\FilterOperator;
 
 class GetUserListRequest extends FormRequest
 {
@@ -16,7 +18,17 @@ class GetUserListRequest extends FormRequest
     {
         return [
             'limit' => 'nullable|int|:min:0|max:25',
-            'page' => 'nullable|int|:min:1'
+            'page' => 'nullable|int|:min:1',
+            'filter' => 'nullable|array',
+            'filter.*.operator' => [
+                'required',
+                new Enum(FilterOperator::class)
+            ],
+            'filter.*.value' => 'nullable|string',
+            'filter.*.column' => 'required|string|in:id,name,email',
+            'sort' => 'nullable|array',
+            'sort.*.column' => 'required|string|in:id,name,email,created_at',
+            'sort.*.type' => 'required|string|in:asc,desc,ASC,DESC'
         ];
     }
 

@@ -21,5 +21,6 @@ Route::prefix('users')->middleware(['auth:sanctum', 'can:users.*'])
        Route::get('/{id}', 'getDetails')->name('getDetails')->middleware(['can:users.view']);
        Route::post('/', 'create')->name('create')->middleware(['can:users.create']);
        Route::put('/{id}', 'update')->name('update')->middleware(['can:users.update']);
+       Route::delete('/multiple', 'deleteByIds')->name('deleteByIds')->middleware(['can:users.delete']);
        Route::delete('/{id}', 'delete')->name('delete')->middleware(['can:users.delete']);
     });
