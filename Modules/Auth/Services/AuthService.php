@@ -44,10 +44,12 @@ class AuthService extends BaseService implements IAuthService
         ];
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
+            $userInfo = $user->toArray();
+            $userInfo['roles'] = $user->getRoleNames();
             $accessToken = $user->createToken('accessToken', [TokenAbility::ACCESS_API->value], Carbon::now()->addMinutes(config('sanctum.expiration')))->plainTextToken;
             $refreshToken = $user->createToken('refreshToken', [TokenAbility::ISSUE_ACCESS_TOKEN->value], Carbon::now()->addMinutes(config('sanctum.rt_expiration')))->plainTextToken;
             return [
-                'user_info' => $user,
+                'user_info' => $userInfo,
                 'access_token' => $accessToken,
                 'refresh_token' => $refreshToken,
                 'expires_at' => Carbon::now()->addMinutes(config('sanctum.expiration'))->format('Y:m:d H:i:s')

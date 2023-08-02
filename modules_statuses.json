@@ -1,5 +1,7 @@
 {
     "User": true,
     "Base": true,
-    "Auth": true
+    "Auth": true,
+    "Media": true,
+    "Site": true
 }
