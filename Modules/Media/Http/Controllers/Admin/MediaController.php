@@ -3,6 +3,7 @@
 namespace Modules\Media\Http\Controllers\Admin;
 
 use Modules\Base\Http\Controllers\ApiController;
+use Modules\Media\Http\Requests\GetMediaItemsRequest;
 use Modules\Media\Http\Requests\UploadMediaFilesRequest;
 use Modules\Media\Services\Media\IMediaService;
 
@@ -12,9 +13,9 @@ class MediaController extends ApiController
     {
     }
 
-    public function getAllMediaItems()
+    public function getAllMediaItems(GetMediaItemsRequest $request)
     {
-        $result = $this->mediaService->getAllMediaItems();
+        $result = $this->mediaService->getAllMediaItems($request);
         return $this->handleResponse($result);
     }
 

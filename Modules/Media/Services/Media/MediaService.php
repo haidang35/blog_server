@@ -5,6 +5,7 @@ namespace Modules\Media\Services\Media;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Modules\Media\Http\Requests\GetMediaItemsRequest;
 use Modules\Media\Repositories\Media\IMediaRepository;
 use Modules\Media\Traits\HandleMediaFiles;
 use Modules\Site\Entities\Site;
@@ -16,10 +17,12 @@ class MediaService implements IMediaService
     {
     }
 
-    public function getAllMediaItems()
+    public function getAllMediaItems(GetMediaItemsRequest $request)
     {
         $site = Site::firstOrFail();
-        $mediaItems = $site->mediaItems()->latest()->paginate(15);
+        $mediaItems = $site->mediaItems()
+            ->latest()
+            ->paginate(15);
         return $mediaItems;
     }
 
