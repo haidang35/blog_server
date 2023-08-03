@@ -45,7 +45,32 @@ class MediaService implements IMediaService
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
-            throw $e;
+            return false;
+        }
+    }
+
+    public function deleteMediaItemById($id)
+    {
+        try {
+            $site = Site::firstOrFail();
+            $mediaItem = $site->mediaItems()->findOrFail($id)->delete();
+            return true;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteMediaItemByIds(array $ids)
+    {
+        try {
+            $site = Site::firstOrFail();
+            $mediaItems = $site->mediaItems()->whereIn('id', $ids)->get();
+            //For each item to delete both record and file storage
+            foreach($mediaItems as $item) {
+                $item->delete();
+            }
+            return true;
+        }catch (\Exception $e) {
             return false;
         }
     }
