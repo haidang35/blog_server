@@ -4,6 +4,7 @@ namespace Modules\Media\Services\Media;
 
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Modules\Media\Http\Requests\GetMediaItemsRequest;
 use Modules\Media\Repositories\Media\IMediaRepository;
@@ -33,13 +34,11 @@ class MediaService implements IMediaService
             $site = Site::firstOrFail();
             foreach ($request->images as $file) {
                 $imageName = Str::random(48) . '.' . $file->extension();
-                $imagePath = public_path("media/temp/{$imageName}");
-                $file->move(public_path('media/temp'), $imageName);
+                $imagePath = public_path("media\\temp\\{$imageName}");
+                $file->move(public_path('media\\temp'), $imageName);
                 $mediaItem = $site->addMedia($imagePath)
-                    ->withCustomProperties([
-//                        'file_name' => $file->getClientOriginalName()
-                    ])
                     ->usingName($file->getClientOriginalName())
+                    ->withCustomProperties([])
                     ->toMediaCollection();
             }
             DB::commit();

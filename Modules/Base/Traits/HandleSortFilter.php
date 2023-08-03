@@ -8,7 +8,6 @@ use Modules\Base\Scopes\SortScope;
 
 trait HandleSortFilter
 {
-
     public static function bootHandleSortFilter()
     {
         static::addGlobalScope(new FilterScope());
