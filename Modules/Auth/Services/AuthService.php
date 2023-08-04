@@ -52,7 +52,7 @@ class AuthService extends BaseService implements IAuthService
                 'user_info' => $userInfo,
                 'access_token' => $accessToken,
                 'refresh_token' => $refreshToken,
-                'expires_at' => Carbon::now()->addMinutes(config('sanctum.expiration'))->format('Y:m:d H:i:s')
+                'expires_at' => Carbon::now()->addMinutes(config('sanctum.expiration'))
             ];
         }
 

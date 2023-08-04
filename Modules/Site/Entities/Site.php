@@ -5,14 +5,14 @@ namespace Modules\Site\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Base\Entities\BaseModel;
-use Modules\Base\Traits\HandleSortFilter;
+use Modules\Base\Traits\HandleFilterRecord;
 use Modules\Media\Entities\Media;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Site extends BaseModel implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, HandleSortFilter;
+    use HasFactory, InteractsWithMedia;
 
 
     const TABLE_NAME = 'sites';

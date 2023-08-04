@@ -6,6 +6,8 @@ use Illuminate\Http\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Modules\Base\Scopes\FilterScope;
+use Modules\Base\Scopes\SortScope;
 use Modules\Media\Http\Requests\GetMediaItemsRequest;
 use Modules\Media\Repositories\Media\IMediaRepository;
 use Modules\Media\Traits\HandleMediaFiles;

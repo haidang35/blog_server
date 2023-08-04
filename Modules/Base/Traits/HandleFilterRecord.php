@@ -2,16 +2,19 @@
 
 namespace Modules\Base\Traits;
 
+use Illuminate\Support\Facades\Auth;
 use Modules\Base\Enums\FilterOperator;
 use Modules\Base\Scopes\FilterScope;
 use Modules\Base\Scopes\SortScope;
 
-trait HandleSortFilter
+trait HandleFilterRecord
 {
-    public static function bootHandleSortFilter()
+    protected static function bootHandleFilterRecord()
     {
-        static::addGlobalScope(new FilterScope());
-        static::addGlobalScope(new SortScope());
+        if(Auth::check()) {
+            static::addGlobalScope(new FilterScope);
+            static::addGlobalScope(new SortScope);
+        }
     }
 
     public function scopeFilterValue($query, array $filter)
