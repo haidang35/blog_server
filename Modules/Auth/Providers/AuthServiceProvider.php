@@ -35,12 +35,6 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
-
-        // Implicitly grant "Super Admin" role all permissions
-        // This works in the app by using gate-related functions like auth()->user->can() and @can()
-        Gate::before(function ($user, $ability) {
-            return $user->hasRole('Super Admin') ? true : null;
-        });
     }
 
     /**
