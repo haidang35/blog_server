@@ -16,7 +16,10 @@ class UserRepository extends BaseRepository implements IUserRepository
 
     public function findAllWithPagination($limit, $filter, $sort)
     {
-        $baseQuery = $this->modal->latest();
+        $baseQuery = $this->modal
+            ->filterRecord($filter)
+            ->sortRecord($sort)
+            ->latest();
         return $baseQuery->paginate($limit);
     }
 }

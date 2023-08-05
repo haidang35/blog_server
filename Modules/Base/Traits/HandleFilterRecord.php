@@ -9,16 +9,9 @@ use Modules\Base\Scopes\SortScope;
 
 trait HandleFilterRecord
 {
-    protected static function bootHandleFilterRecord()
+    public function scopeFilterRecord($query, array|null $filter)
     {
-        if(Auth::check()) {
-            static::addGlobalScope(new FilterScope);
-            static::addGlobalScope(new SortScope);
-        }
-    }
-
-    public function scopeFilterValue($query, array $filter)
-    {
+        $filter = $filter ?? [];
         foreach ($filter as $filterItem) {
             $operator = $filterItem['operator'];
             $filterValue = array_key_exists('value', $filterItem) ? $filterItem['value'] : NULL;
@@ -52,8 +45,9 @@ trait HandleFilterRecord
         return $query;
     }
 
-    public function scopeSortColumn($query, array $sort)
+    public function scopeSortRecord($query, array|null $sort)
     {
+        $sort = $sort ?? [];
         foreach($sort as $sortItem) {
             $query->orderBy($sortItem['column'], $sortItem['type']);
         }

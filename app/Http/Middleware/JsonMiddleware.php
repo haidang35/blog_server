@@ -42,16 +42,5 @@ class JsonMiddleware
 
         // Get the response
         return $response = $next($request);
-
-//        // If the response is not strictly a JsonResponse, we make it
-//        if (!$response instanceof JsonResponse) {
-//            $response = $this->factory->json(
-//                $response->content(),
-//                $response->status(),
-//                $response->headers->all()
-//            );
-//        }
-//
-//        return $response;
     }
 }

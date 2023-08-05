@@ -25,6 +25,8 @@ class MediaService implements IMediaService
         $site = Site::firstOrFail();
         $mediaItems = $site->mediaItems()
             ->latest()
+            ->filterRecord($request->filter)
+            ->sortRecord($request->sort)
             ->paginate(15);
         return $mediaItems;
     }

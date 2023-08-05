@@ -15,6 +15,7 @@ use Modules\User\Http\Controllers\Admin\UserController;
 */
 
 Route::prefix('users')
+    ->middleware(['auth:sanctum', 'can:users.*'])
     ->controller(UserController::class)
     ->group(function() {
        Route::get('/', 'getList')->name('getList')->middleware(['can:users.view']);
@@ -23,4 +24,4 @@ Route::prefix('users')
        Route::put('/{id}', 'update')->name('update')->middleware(['can:users.update']);
        Route::delete('/multiple', 'deleteByIds')->name('deleteByIds')->middleware(['can:users.delete']);
        Route::delete('/{id}', 'delete')->name('delete')->middleware(['can:users.delete']);
-    })->middleware(['auth:sanctum', 'can:users.*']);
+    });
