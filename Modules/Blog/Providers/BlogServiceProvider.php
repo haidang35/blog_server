@@ -6,8 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use Modules\Blog\Repositories\Blog\BlogRepository;
 use Modules\Blog\Repositories\Blog\IBlogRepository;
+use Modules\Blog\Repositories\BlogCategory\BlogCategoryRepository;
+use Modules\Blog\Repositories\BlogCategory\IBlogCategoryRepository;
 use Modules\Blog\Services\Blog\BlogService;
 use Modules\Blog\Services\Blog\IBlogService;
+use Modules\Blog\Services\BlogCategory\BlogCategoryService;
+use Modules\Blog\Services\BlogCategory\IBlogCategoryService;
 
 class BlogServiceProvider extends ServiceProvider
 {
@@ -22,8 +26,10 @@ class BlogServiceProvider extends ServiceProvider
     protected $moduleNameLower = 'blog';
 
     public $bindings = [
-      IBlogRepository::class => BlogRepository::class,
-      IBlogService::class => BlogService::class,
+        IBlogRepository::class => BlogRepository::class,
+        IBlogService::class => BlogService::class,
+        IBlogCategoryRepository::class => BlogCategoryRepository::class,
+        IBlogCategoryService::class => BlogCategoryService::class,
     ];
 
     /**

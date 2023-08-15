@@ -3,11 +3,11 @@
 namespace Modules\Blog\Http\Controllers\Admin;
 
 use Modules\Base\Http\Controllers\ApiController;
-use Modules\Blog\Http\Requests\Admin\CreateBlogRequest;
-use Modules\Blog\Http\Requests\Admin\DeleteBlogsRequest;
-use Modules\Blog\Http\Requests\Admin\GetBlogDetailsRequest;
-use Modules\Blog\Http\Requests\Admin\GetBlogListRequest;
-use Modules\Blog\Http\Requests\Admin\UpdateBlogRequest;
+use Modules\Blog\Http\Requests\Admin\Blog\CreateBlogRequest;
+use Modules\Blog\Http\Requests\Admin\Blog\DeleteBlogsRequest;
+use Modules\Blog\Http\Requests\Admin\Blog\GetBlogDetailsRequest;
+use Modules\Blog\Http\Requests\Admin\Blog\GetBlogListRequest;
+use Modules\Blog\Http\Requests\Admin\Blog\UpdateBlogRequest;
 use Modules\Blog\Services\Blog\IBlogService;
 
 class BlogController extends ApiController

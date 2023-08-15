@@ -1,10 +1,8 @@
 <?php
 
-namespace Modules\Blog\Http\Requests\Admin;
+namespace Modules\Blog\Http\Requests\Admin\Blog;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
-use Modules\Base\Enums\FilterOperator;
 
 class GetBlogDetailsRequest extends FormRequest
 {

@@ -1,16 +1,11 @@
 <?php
 
-namespace Modules\Blog\Http\Requests\Admin;
+namespace Modules\Blog\Http\Requests\Admin\BlogCategory;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class DeleteBlogsRequest extends FormRequest
+class CreateBlogCategoryRequest extends FormRequest
 {
-    protected function prepareForValidation()
-    {
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -19,8 +14,8 @@ class DeleteBlogsRequest extends FormRequest
     public function rules()
     {
         return [
-            'ids' => 'required|array',
-            'ids.*' => 'required|exists:blogs,uuid',
+            'name' => 'required|string',
+            'description' => 'nullable|string',
         ];
     }
 
@@ -33,4 +28,5 @@ class DeleteBlogsRequest extends FormRequest
     {
         return true;
     }
+
 }
