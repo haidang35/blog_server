@@ -18,7 +18,7 @@ class UserService extends BaseService implements IUserService
 
     public function findAll(GetUserListRequest $request)
     {
-        return $this->userRepository->findAllWithPagination(
+        return $this->userRepository->findAllWithFilter(
             $request->limit,
             $request->filter ?? [],
             $request->sort ?? []

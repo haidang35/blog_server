@@ -3,5 +3,6 @@
     "Base": true,
     "Auth": true,
     "Media": true,
-    "Site": true
+    "Site": true,
+    "Blog": true
 }

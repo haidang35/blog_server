@@ -9,6 +9,8 @@ interface IBaseRepository
      */
     public function findAll();
 
+    public function findAllWithFilter($limit, $filter, $sort, $selects = []);
+
     /**
      * @param int $id
      * @return mixed
@@ -35,4 +37,9 @@ interface IBaseRepository
     public function deleteById(int $id);
 
     public function deleteByIds(array $ids);
+
+    public function findByUUID($id);
+
+    public function deleteByUUID($id);
+    public function deleteByUUIDs($ids);
 }

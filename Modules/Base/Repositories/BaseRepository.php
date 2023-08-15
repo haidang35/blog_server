@@ -9,16 +9,30 @@ class BaseRepository implements IBaseRepository
     /**
      * @var
      */
-    protected $modal;
+    protected $model;
 
     /**
      * @return mixed
      */
     public function findAll()
     {
-        return $this->modal
+        return $this->model
             ->latest()
             ->get();
+    }
+
+    public function findAllWithFilter($limit, $filter, $sort, $selects = [])
+    {
+        $query = $this->model
+            ->latest()
+            ->filterRecord($filter)
+            ->sortRecord($sort);
+
+        if($selects) {
+            $query->select($selects);
+        }
+        return $query
+            ->paginate($limit);
     }
 
     /**
@@ -27,7 +41,7 @@ class BaseRepository implements IBaseRepository
      */
     public function findById(int $id)
     {
-        return $this->modal->findOrFail($id);
+        return $this->model->findOrFail($id);
     }
 
     /**
@@ -36,7 +50,7 @@ class BaseRepository implements IBaseRepository
      */
     public function create(array $attributes)
     {
-        return $this->modal->create($attributes);
+        return $this->model->create($attributes);
     }
 
     /**
@@ -46,7 +60,7 @@ class BaseRepository implements IBaseRepository
      */
     public function update(int $id, array $attributes)
     {
-        $entity = $this->modal->findOrFail($id);
+        $entity = $this->model->findOrFail($id);
         $entity->update($attributes);
         return $entity;
     }
@@ -57,16 +71,31 @@ class BaseRepository implements IBaseRepository
      */
     public function deleteById(int $id)
     {
-        $this->modal->findOrFail($id)->delete();
+        $this->model->findOrFail($id)->delete();
     }
 
     public function deleteByIds(array $ids)
     {
         try {
-            $this->modal->whereIn('id', $ids)->delete();
+            $this->model->whereIn('id', $ids)->delete();
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
+    }
+
+    public function findByUUID($id)
+    {
+        return $this->model->findByUUID($id);
+    }
+
+    public function deleteByUUID($id)
+    {
+        $this->model->findByUUID($id)->delete();
+    }
+
+    public function deleteByUUIDs($ids)
+    {
+        $this->model->whereIn('uuid', $ids)->delete();
     }
 }
