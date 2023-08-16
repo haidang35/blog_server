@@ -7,8 +7,15 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class CreateBlogCategoryRequest extends FormRequest
+class UpdateBlogCategoryRequest extends FormRequest
 {
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'id' => $this->route('id')
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -17,6 +24,7 @@ class CreateBlogCategoryRequest extends FormRequest
     public function rules()
     {
         return [
+            'id' => 'required|int|exists:blog_categories,id',
             'parent_id' => [
                 'nullable',
                 'int',

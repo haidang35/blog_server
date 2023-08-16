@@ -2,6 +2,7 @@
 
 return [
   'headers' => [
-      'domain' => 'Site-Domain'
+      'domain' => 'Site-Domain',
+      'locale' => 'WMT-Site-Locale',
   ]
 ];

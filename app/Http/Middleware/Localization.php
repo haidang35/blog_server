@@ -17,7 +17,7 @@ class Localization
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $key = 'Locale';
+        $key = 'WMT-Site-Locale';
         $defaultLocale = config('app.fallback_locale');
 
         /**

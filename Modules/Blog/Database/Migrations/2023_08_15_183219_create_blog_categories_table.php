@@ -17,6 +17,7 @@ return new class extends Migration
         Schema::create(BlogCategory::TABLE_NAME, function (Blueprint $table) {
             $table->id();
             $table->uuid()->unique();
+            $table->unsignedBigInteger(BlogCategory::PARENT_ID)->default(0)->index();
             $table->json(BlogCategory::NAME);
             $table->json(BlogCategory::DESCRIPTION)->nullable();
             $table->timestamps();

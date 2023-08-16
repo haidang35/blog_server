@@ -13,4 +13,12 @@ class BlogCategoryRepository extends BaseRepository implements IBlogCategoryRepo
     {
         $this->model = $model;
     }
+
+    public function findAll()
+    {
+        return $this->model
+            ->where(BlogCategory::PARENT_ID, 0)
+            ->with(['children'])
+            ->get();
+    }
 }

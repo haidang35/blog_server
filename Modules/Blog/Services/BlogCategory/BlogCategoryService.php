@@ -2,10 +2,13 @@
 
 namespace Modules\Blog\Services\BlogCategory;
 
+use Illuminate\Support\Facades\DB;
 use Modules\Base\Services\BaseService;
 use Modules\Blog\Entities\BlogCategory;
 use Modules\Blog\Http\Requests\Admin\BlogCategory\CreateBlogCategoryRequest;
+use Modules\Blog\Http\Requests\Admin\BlogCategory\DeleteBlogCategoriesRequest;
 use Modules\Blog\Http\Requests\Admin\BlogCategory\GetBlogCategoryListRequest;
+use Modules\Blog\Http\Requests\Admin\BlogCategory\UpdateBlogCategoryRequest;
 use Modules\Blog\Repositories\BlogCategory\IBlogCategoryRepository;
 
 class BlogCategoryService extends BaseService implements IBlogCategoryService
@@ -16,51 +19,47 @@ class BlogCategoryService extends BaseService implements IBlogCategoryService
 
     public function findAll(GetBlogCategoryListRequest $request)
     {
-        $filter = collect($request->filter)->map(function($item) {
-            if(in_array($item['column'], [BlogCategory::NAME])) {
-                $item['column'] = $item['column'] . '->' . app()->getLocale();
-            }
-            return $item;
-        })->toArray();
-        $blogs = $this->blogCategoryRepository->findAllWithFilter(
-            $request->limit,
-            $filter,
-            $request->sort,
-            [
-                BlogCategory::ID,
-                BlogCategory::NAME,
-                BlogCategory::CREATED_AT,
-                BlogCategory::UPDATED_AT
-            ]
-        )->toArray();
-        $blogs['data'] = collect($blogs['data'])->map(function($value) {
-            if(array_key_exists(app()->getLocale(), $value[BlogCategory::NAME])) {
-                $value[BlogCategory::NAME] = $value[BlogCategory::NAME][app()->getLocale()];
-            }else {
-                $value[BlogCategory::NAME] = null;
-            }
-            return $value;
-        });
-        return $blogs;
+        $blogs = $this->blogCategoryRepository->findAll();
+        return $this->formatTranslations($blogs->toArray(), [BlogCategory::NAME, BlogCategory::DESCRIPTION], 'children');
     }
 
-    public function findById()
+    public function findById($id)
     {
-        // TODO: Implement findById() method.
+        return $this->blogCategoryRepository->findById($id);
     }
 
     public function create(CreateBlogCategoryRequest $request)
     {
-        return $this->blogCategoryRepository->create($request->only([BlogCategory::NAME, BlogCategory::DESCRIPTION]));
+        $request->parent_id = $request->parent_id ?? 0;
+        return $this->blogCategoryRepository->create($request->only([
+            BlogCategory::PARENT_ID,
+            BlogCategory::NAME,
+            BlogCategory::DESCRIPTION,
+        ]));
     }
 
-    public function update()
+    public function update(UpdateBlogCategoryRequest $request)
     {
-        // TODO: Implement update() method.
+        $category = $this->blogCategoryRepository->update($request->id, $request->only([
+            BlogCategory::PARENT_ID,
+            BlogCategory::NAME,
+            BlogCategory::DESCRIPTION,
+        ]));
+        return $category;
     }
 
-    public function deleteCategories()
+    public function deleteCategories(DeleteBlogCategoriesRequest $request)
     {
-        // TODO: Implement deleteCategories() method.
+        DB::beginTransaction();
+        try {
+            $categories = BlogCategory::whereIn(BlogCategory::ID, $request->ids)->with(['children'])->get();
+            $ids = $this->getValuesInTree($categories, 'children', 'id');
+            $this->blogCategoryRepository->deleteByIds($ids);
+            DB::commit();
+            return true;
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return false;
+        }
     }
 }

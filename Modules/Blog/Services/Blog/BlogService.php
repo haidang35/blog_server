@@ -37,14 +37,6 @@ class BlogService implements IBlogService
                 Blog::UPDATED_AT
             ]
         )->toArray();
-        $blogs['data'] = collect($blogs['data'])->map(function($value) {
-            if(array_key_exists(app()->getLocale(), $value[Blog::TITLE])) {
-                $value[Blog::TITLE] = $value[Blog::TITLE][app()->getLocale()];
-            }else {
-                $value[Blog::TITLE] = null;
-            }
-            return $value;
-        });
         return $blogs;
     }
 

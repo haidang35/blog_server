@@ -19,5 +19,5 @@ Route::middleware(['auth:sanctum'])->prefix('blog-categories')->name('admin.blog
     Route::post('/', 'create')->name('create')->middleware('can:blog_categories.create');
     Route::put('/{id}', 'update')->name('update')->middleware('can:blog_categories.update');
     Route::delete('/multiple', 'deleteCategories')->name('deleteCategories')->middleware('can:blog_categories.delete');
-    Route::delete('/{id}', 'delete')->name('delete')->middleware('can:blog_categories.delete');
+//    Route::delete('/{id}', 'delete')->name('delete')->middleware('can:blog_categories.delete');
 });

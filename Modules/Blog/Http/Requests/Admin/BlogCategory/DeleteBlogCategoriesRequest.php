@@ -2,13 +2,14 @@
 
 namespace Modules\Blog\Http\Requests\Admin\BlogCategory;
 
-use App\Rules\ExistsIfEqualsZero;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class CreateBlogCategoryRequest extends FormRequest
+class DeleteBlogCategoriesRequest extends FormRequest
 {
+    protected function prepareForValidation()
+    {
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -17,13 +18,8 @@ class CreateBlogCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'parent_id' => [
-                'nullable',
-                'int',
-                new ExistsIfEqualsZero('blog_categories', 'id')
-            ],
-            'name' => 'required|string',
-            'description' => 'nullable|string',
+            'ids' => 'required|array',
+            'ids.*' => 'required|exists:blog_categories,id',
         ];
     }
 
@@ -36,5 +32,4 @@ class CreateBlogCategoryRequest extends FormRequest
     {
         return true;
     }
-
 }
