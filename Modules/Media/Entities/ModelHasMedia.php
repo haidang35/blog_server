@@ -14,6 +14,7 @@ class ModelHasMedia extends BaseModel
     const MODEL_ID = 'model_id';
     const MODEL_TYPE = 'model_type';
     const MEDIA_ID = 'media_id';
+    const TYPE = 'type';
 
     protected $table = self::TABLE_NAME;
 

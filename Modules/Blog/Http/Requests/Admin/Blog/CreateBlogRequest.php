@@ -17,7 +17,9 @@ class CreateBlogRequest extends FormRequest
             'title' => 'required|string',
             'content' => 'required|string',
             'files' => 'nullable|array',
-            'files.*' => 'required|int|exists:media,id'
+            'files.*' => 'required|int|exists:media,id',
+            'categories' => 'nullable|array',
+            'categories.*' => 'nullable|int|exists:blog_categories,id',
         ];
     }
 

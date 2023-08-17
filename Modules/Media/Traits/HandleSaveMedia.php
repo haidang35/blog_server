@@ -16,15 +16,16 @@ trait HandleSaveMedia
             ModelHasMedia::MEDIA_ID,
             self::ID,
             Media::ID,
-        )->where(ModelHasMedia::MODEL_TYPE, get_class($this));
+        )->wherePivot(ModelHasMedia::MODEL_TYPE, get_class($this));
     }
 
     public function syncFiles($fileIds)
     {
         $syncList = [];
         foreach ($fileIds as $file) {
-            $syncList[$file] = [
+            $syncList[$file[ModelHasMedia::ID]] = [
                 ModelHasMedia::MODEL_TYPE => get_class($this),
+                ModelHasMedia::TYPE => $file[ModelHasMedia::TYPE],
             ];
         }
         return $this->files()->sync($syncList);

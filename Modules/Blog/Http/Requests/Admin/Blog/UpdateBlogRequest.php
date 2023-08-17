@@ -23,7 +23,11 @@ class UpdateBlogRequest extends FormRequest
         return [
             'id' => 'required|exists:blogs,uuid',
             'title' => 'required|string',
-            'content' => 'required|string'
+            'content' => 'required|string',
+            'files' => 'nullable|array',
+            'files.*' => 'required|int|exists:media,id',
+            'categories' => 'nullable|array',
+            'categories.*' => 'nullable|int|exists:blog_categories,id',
         ];
     }
 

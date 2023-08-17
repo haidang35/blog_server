@@ -2,8 +2,8 @@
 
 namespace Modules\Blog\Services\Blog;
 
-
 use Illuminate\Support\Facades\DB;
+use Modules\Base\Services\BaseService;
 use Modules\Blog\Entities\Blog;
 use Modules\Blog\Http\Requests\Admin\Blog\CreateBlogRequest;
 use Modules\Blog\Http\Requests\Admin\Blog\DeleteBlogsRequest;
@@ -11,8 +11,9 @@ use Modules\Blog\Http\Requests\Admin\Blog\GetBlogDetailsRequest;
 use Modules\Blog\Http\Requests\Admin\Blog\GetBlogListRequest;
 use Modules\Blog\Http\Requests\Admin\Blog\UpdateBlogRequest;
 use Modules\Blog\Repositories\Blog\IBlogRepository;
+use Modules\Media\Entities\ModelHasMedia;
 
-class BlogService implements IBlogService
+class BlogService extends BaseService implements IBlogService
 {
     public function __construct(protected IBlogRepository $blogRepository)
     {
@@ -31,12 +32,16 @@ class BlogService implements IBlogService
             $filter,
             $request->sort,
             [
+                Blog::ID,
                 Blog::UUID,
                 Blog::TITLE,
                 Blog::CREATED_AT,
                 Blog::UPDATED_AT
             ]
         )->toArray();
+        $blogs['data'] = $this->formatTranslations($blogs['data'], [
+            Blog::TITLE,
+        ]);
         return $blogs;
     }
 
@@ -48,7 +53,14 @@ class BlogService implements IBlogService
                 Blog::TITLE => $request->get('title'),
                 Blog::CONTENT => $request->get('content'),
             ]);
-            $blog->syncFiles($request->get('files'));
+            $blog->categories()->sync($request->categories ?? []);
+            $files = $request->get('files');
+            $files = collect($files)->map(function($file) {
+                $newFile[ModelHasMedia::ID] = $file;
+                $newFile[ModelHasMedia::TYPE] = Blog::MEDIA_TYPE_THUMBNAIL;
+               return $newFile;
+            });
+            $blog->syncFiles($files);
             DB::commit();
             return $blog;
         }catch (\Exception $e) {
@@ -59,13 +71,26 @@ class BlogService implements IBlogService
 
     public function getBlogDetails(GetBlogDetailsRequest $request)
     {
-        return $this->blogRepository->findByUUID($request->id);
+        $blog = $this->blogRepository->findByUUID($request->id);
+        $blog['category_ids'] = $blog->categoryIds();
+        return $this->formatTranslationsForObject($blog->toArray(), [Blog::TITLE, Blog::CONTENT]);
     }
 
     public function update(UpdateBlogRequest $request)
     {
         $blog = $this->blogRepository->findByUUID($request->id);
-        $blog->update($request->only([Blog::TITLE, Blog::CONTENT]));
+        $blog->update([
+            Blog::TITLE => $request->get('title'),
+            Blog::CONTENT => $request->get('content'),
+        ]);
+        $blog->categories()->sync($request->categories ?? []);
+        $files = $request->get('files');
+        $files = collect($files)->map(function($file) {
+            $newFile[ModelHasMedia::ID] = $file;
+            $newFile[ModelHasMedia::TYPE] = Blog::MEDIA_TYPE_THUMBNAIL;
+            return $newFile;
+        });
+        $blog->syncFiles($files);
         return $blog;
     }
 
