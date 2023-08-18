@@ -12,6 +12,7 @@ use Modules\Blog\Http\Requests\Admin\Blog\GetBlogListRequest;
 use Modules\Blog\Http\Requests\Admin\Blog\UpdateBlogRequest;
 use Modules\Blog\Repositories\Blog\IBlogRepository;
 use Modules\Media\Entities\ModelHasMedia;
+use Modules\SeoMeta\Entities\SEOMeta;
 
 class BlogService extends BaseService implements IBlogService
 {
@@ -61,6 +62,15 @@ class BlogService extends BaseService implements IBlogService
                return $newFile;
             });
             $blog->syncFiles($files);
+            $seoMeta = $request->seo_meta;
+            $keywords = &$seoMeta['keywords'];
+            $keywords = is_array($keywords) ? implode(',', $keywords) : $keywords;
+            $blog->syncSEOMeta([
+                SEOMeta::META_TITLE => &$seoMeta['title'],
+                SEOMeta::META_DESCRIPTION => &$seoMeta['description'],
+                SEOMeta::META_KEYWORDS => $keywords,
+                SEOMeta::META_ROBOTS => &$seoMeta['robots'],
+            ]);
             DB::commit();
             return $blog;
         }catch (\Exception $e) {

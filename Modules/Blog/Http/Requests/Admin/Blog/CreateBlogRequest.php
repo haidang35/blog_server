@@ -20,6 +20,11 @@ class CreateBlogRequest extends FormRequest
             'files.*' => 'required|int|exists:media,id',
             'categories' => 'nullable|array',
             'categories.*' => 'nullable|int|exists:blog_categories,id',
+            'seo_meta' => 'nullable|array',
+            'seo_meta.title' => 'nullable|string',
+            'seo_meta.description' => 'nullable|string',
+            'seo_meta.keywords' => 'nullable|array',
+            'seo_meta.robots' => 'nullable|array',
         ];
     }
 

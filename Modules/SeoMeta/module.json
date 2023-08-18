@@ -1,0 +1,11 @@
+{
+    "name": "SeoMeta",
+    "alias": "seometa",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\SeoMeta\\Providers\\SeoMetaServiceProvider"
+    ],
+    "files": []
+}

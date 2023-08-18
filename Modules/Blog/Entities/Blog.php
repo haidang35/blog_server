@@ -10,19 +10,24 @@ use Modules\Base\Traits\HasUUID;
 use Modules\Media\Entities\Media;
 use Modules\Media\Entities\ModelHasMedia;
 use Modules\Media\Traits\HandleSaveMedia;
+use Modules\SeoMeta\Traits\HasSEOMeta;
 use Modules\Site\Traits\BelongsToSite;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 use Spatie\Translatable\HasTranslations;
 
 class Blog extends BaseModel implements HasMedia
 {
-    use HasFactory, HasTranslations, SoftDeletes, InteractsWithMedia, HandleFilterRecord, HasUUID, HandleSaveMedia, BelongsToSite;
+    use HasFactory, HasTranslations, SoftDeletes, InteractsWithMedia, HandleFilterRecord,
+        HasUUID, HandleSaveMedia, BelongsToSite, HasSEOMeta, HasSlug;
 
     const TABLE_NAME = 'blogs';
     protected $table = self::TABLE_NAME;
     const UUID = 'uuid';
     const TITLE = 'title';
+    const SLUG = 'slug';
     const CONTENT = 'content';
     const CREATED_BY = 'created_by';
     const UPDATED_BY = 'updated_by';
@@ -33,6 +38,7 @@ class Blog extends BaseModel implements HasMedia
     protected $fillable = [
         self::UUID,
         self::TITLE,
+        self::SLUG,
         self::CONTENT,
         self::CREATED_BY,
         self::UPDATED_BY,
@@ -51,7 +57,7 @@ class Blog extends BaseModel implements HasMedia
         return \Modules\Blog\Database\factories\BlogFactory::new();
     }
 
-    public $translatable = [self::TITLE, self::CONTENT];
+    public $translatable = [self::TITLE, self::CONTENT, self::SLUG];
 
     public function categories()
     {
@@ -80,5 +86,15 @@ class Blog extends BaseModel implements HasMedia
             'name' => $file ? $file['name'] : null,
             'id' => $file ? $file['id'] : null,
         ];
+    }
+
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions() : SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom(self::TITLE)
+            ->saveSlugsTo(self::SLUG);
     }
 }

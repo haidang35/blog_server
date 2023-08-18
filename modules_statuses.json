@@ -4,5 +4,6 @@
     "Auth": true,
     "Media": true,
     "Site": true,
-    "Blog": true
+    "Blog": true,
+    "SeoMeta": true
 }
