@@ -1,6 +1,7 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteRule ^(.*)$ public/$1 [L]
+    RewriteRule ^([_0-9a-zA-Z-]+/)?(public/media.*) $2 [L]
     Options +FollowSymLinks -MultiViews
     # Turn mod_rewrite on
     RewriteBase /
