@@ -38,8 +38,8 @@ class MediaService implements IMediaService
             $site = Site::firstOrFail();
             foreach ($request->images as $file) {
                 $imageName = Str::random(48) . '.' . $file->extension();
-                $imagePath = public_path("media\\temp\\{$imageName}");
-                $file->move(public_path('media\\temp'), $imageName);
+                $imagePath = public_path("media/temp/{$imageName}");
+                $file->move(public_path('media/temp'), $imageName);
                 $mediaItem = $site->addMedia($imagePath)
                     ->usingName($file->getClientOriginalName())
                     ->withCustomProperties([])
