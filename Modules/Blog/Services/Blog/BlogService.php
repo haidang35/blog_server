@@ -53,6 +53,7 @@ class BlogService extends BaseService implements IBlogService
             $blog = $this->blogRepository->create([
                 Blog::TITLE => $request->get('title'),
                 Blog::CONTENT => $request->get('content'),
+                Blog::DESCRIPTION => $request->get('description'),
             ]);
             $blog->categories()->sync($request->categories ?? []);
             $files = $request->get('files');
@@ -83,7 +84,7 @@ class BlogService extends BaseService implements IBlogService
     {
         $blog = $this->blogRepository->findByUUID($request->id);
         $blog['category_ids'] = $blog->categoryIds();
-        return $this->formatTranslationsForObject($blog->toArray(), [Blog::TITLE, Blog::CONTENT]);
+        return $this->formatTranslationsForObject($blog->toArray(), [Blog::TITLE, Blog::CONTENT, Blog::DESCRIPTION]);
     }
 
     public function update(UpdateBlogRequest $request)
@@ -92,6 +93,7 @@ class BlogService extends BaseService implements IBlogService
         $blog->update([
             Blog::TITLE => $request->get('title'),
             Blog::CONTENT => $request->get('content'),
+            Blog::DESCRIPTION => $request->get('description'),
         ]);
         $blog->categories()->sync($request->categories ?? []);
         $files = $request->get('files');
@@ -101,6 +103,15 @@ class BlogService extends BaseService implements IBlogService
             return $newFile;
         });
         $blog->syncFiles($files);
+        $seoMeta = $request->seo_meta;
+        $keywords = &$seoMeta['keywords'];
+        $keywords = is_array($keywords) ? implode(',', $keywords) : $keywords;
+        $blog->syncSEOMeta([
+            SEOMeta::META_TITLE => &$seoMeta['title'],
+            SEOMeta::META_DESCRIPTION => &$seoMeta['description'],
+            SEOMeta::META_KEYWORDS => $keywords,
+            SEOMeta::META_ROBOTS => &$seoMeta['robots'],
+        ]);
         return $blog;
     }
 
@@ -122,5 +133,47 @@ class BlogService extends BaseService implements IBlogService
         }catch (\Exception $e) {
             return false;
         }
+    }
+
+    public function getBlogListForClient(\Modules\Blog\Http\Requests\Public\Blog\GetBlogListRequest $request)
+    {
+        $filter = collect($request->filter)->map(function($item) {
+            if(in_array($item['column'], [Blog::TITLE])) {
+                $item['column'] = $item['column'] . '->' . app()->getLocale();
+            }
+            return $item;
+        })->toArray();
+        $blogs = $this->blogRepository->findAllWithFilter(
+            $request->limit,
+            $filter,
+            $request->sort,
+            [
+                Blog::ID,
+                Blog::UUID,
+                Blog::SLUG,
+                Blog::TITLE,
+                Blog::DESCRIPTION,
+                Blog::CONTENT,
+                Blog::CREATED_AT,
+            ]
+        )->toArray();
+        $blogs['data'] = $this->formatTranslations($blogs['data'], [
+            Blog::TITLE,
+            Blog::DESCRIPTION,
+            Blog::CONTENT,
+            Blog::SLUG,
+        ]);
+        return $blogs;
+    }
+
+    public function findBySlug($slug)
+    {
+        $blog = Blog::findBySlug($slug);
+        return $this->formatTranslationsForObject($blog->toArray(), [
+            Blog::TITLE,
+            Blog::DESCRIPTION,
+            Blog::CONTENT,
+            Blog::SLUG,
+        ]);
     }
 }

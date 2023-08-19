@@ -21,4 +21,8 @@ interface IBlogService
 
     public function delete($id);
     public function deleteBlogs(DeleteBlogsRequest $request);
+
+    public function getBlogListForClient(\Modules\Blog\Http\Requests\Public\Blog\GetBlogListRequest $request);
+
+    public function findBySlug($slug);
 }

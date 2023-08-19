@@ -15,6 +15,7 @@ class CreateBlogRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
+            'description' => 'required|string',
             'content' => 'required|string',
             'files' => 'nullable|array',
             'files.*' => 'required|int|exists:media,id',

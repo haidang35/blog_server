@@ -15,7 +15,7 @@ class BaseService
         $locale = request()->header(config('client.headers.locale'), config('app.fallback_locale'));
         return collect($data)->map(function($item) use($transFields, $locale, $treeKey){
             foreach($transFields as $field) {
-                if(array_key_exists($locale, $item[$field])) {
+                if($item[$field] && array_key_exists($locale, $item[$field])) {
                     $item[$field] = $item[$field][$locale];
                 }else {
                     $item[$field] = null;
@@ -32,7 +32,7 @@ class BaseService
     {
         $locale = request()->header(config('client.headers.locale'), config('app.fallback_locale'));
         foreach($transFields as $field) {
-            if(array_key_exists($locale, $data[$field])) {
+            if($data[$field] && array_key_exists($locale, $data[$field])) {
                 $data[$field] = $data[$field][$locale];
             }else {
                 $data[$field] = null;

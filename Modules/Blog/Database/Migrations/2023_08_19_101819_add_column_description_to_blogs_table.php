@@ -15,8 +15,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table(Blog::TABLE_NAME, function (Blueprint $table) {
-            if(!Schema::hasColumn(Blog::TABLE_NAME, Blog::SLUG)) {
-                $table->json(Blog::SLUG)->after(Blog::TITLE);
+            if(!Schema::hasColumn(Blog::TABLE_NAME, Blog::DESCRIPTION)) {
+                $table->json(Blog::DESCRIPTION)->after(Blog::SLUG)->nullable();
             }
         });
     }

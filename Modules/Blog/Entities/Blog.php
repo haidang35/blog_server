@@ -15,13 +15,14 @@ use Modules\Site\Traits\BelongsToSite;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\HasTranslatableSlug;
 use Spatie\Sluggable\SlugOptions;
 use Spatie\Translatable\HasTranslations;
 
 class Blog extends BaseModel implements HasMedia
 {
     use HasFactory, HasTranslations, SoftDeletes, InteractsWithMedia, HandleFilterRecord,
-        HasUUID, HandleSaveMedia, BelongsToSite, HasSEOMeta, HasSlug;
+        HasUUID, HandleSaveMedia, BelongsToSite, HasSEOMeta, HasTranslatableSlug;
 
     const TABLE_NAME = 'blogs';
     protected $table = self::TABLE_NAME;
@@ -29,6 +30,7 @@ class Blog extends BaseModel implements HasMedia
     const TITLE = 'title';
     const SLUG = 'slug';
     const CONTENT = 'content';
+    const DESCRIPTION = 'description';
     const CREATED_BY = 'created_by';
     const UPDATED_BY = 'updated_by';
     const DELETED_BY = 'deleted_by';
@@ -40,6 +42,7 @@ class Blog extends BaseModel implements HasMedia
         self::TITLE,
         self::SLUG,
         self::CONTENT,
+        self::DESCRIPTION,
         self::CREATED_BY,
         self::UPDATED_BY,
         self::DELETED_BY
@@ -57,7 +60,7 @@ class Blog extends BaseModel implements HasMedia
         return \Modules\Blog\Database\factories\BlogFactory::new();
     }
 
-    public $translatable = [self::TITLE, self::CONTENT, self::SLUG];
+    public $translatable = [self::TITLE, self::CONTENT, self::SLUG, self::DESCRIPTION];
 
     public function categories()
     {

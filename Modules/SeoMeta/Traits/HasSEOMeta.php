@@ -8,7 +8,7 @@ trait HasSEOMeta
 {
     public function seoMeta()
     {
-        return $this->hasMany(
+        return $this->hasOne(
             SEOMeta::class,
             SEOMeta::MODEL_ID,
             self::ID
