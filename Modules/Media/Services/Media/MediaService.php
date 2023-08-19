@@ -43,14 +43,12 @@ class MediaService implements IMediaService
                 $mediaItem = $site->addMedia($imagePath)
                     ->usingName($file->getClientOriginalName())
                     ->withCustomProperties([])
-                    ->preservingOriginal()
                     ->toMediaCollection();
             }
             DB::commit();
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
             return false;
         }
     }

@@ -41,7 +41,7 @@ class CustomPathGenerator implements PathGenerator
         $site = $media->site->domain;
 
         if ($prefix !== '') {
-            return '';
+            return 'uploads';
         }
 
         return $media->uuid;
