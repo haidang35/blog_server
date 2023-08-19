@@ -39,7 +39,8 @@ class MediaService implements IMediaService
             foreach ($request->images as $file) {
                 $imageName = Str::random(48) . '.' . $file->extension();
                 $imagePath = public_path("media/temp/{$imageName}");
-                $file->move(public_path('media/temp'), $imageName);
+//                $file->move(public_path('media/temp'), $imageName);
+                \Illuminate\Support\Facades\File::put($imagePath, $file);
                 $mediaItem = $site->addMedia($imagePath)
                     ->usingName($file->getClientOriginalName())
                     ->withCustomProperties([])
@@ -49,6 +50,7 @@ class MediaService implements IMediaService
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
+            dd($e);
             return false;
         }
     }
