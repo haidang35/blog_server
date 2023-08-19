@@ -1,7 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteRule ^(.*)$ public/$1 [L]
-    RewriteRule ^([_0-9a-zA-Z-]+/)?(public/media.*) $2 [L]
     Options +FollowSymLinks -MultiViews
     # Turn mod_rewrite on
     RewriteBase /
@@ -11,6 +10,7 @@
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^([_0-9a-zA-Z-]+/)?(media.*) $2 [L]
     RewriteRule ^(.*)$ index.php?$1 [L,QSA]
 
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s(.*)/index\.php [NC]
