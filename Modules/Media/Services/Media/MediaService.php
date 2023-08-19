@@ -45,7 +45,7 @@ class MediaService implements IMediaService
                     ->withCustomProperties([])
                     ->toMediaCollection();
                 $mediaItemPath = "media/uploads/{$mediaItem->site->name}/{$mediaItem->uuid}/{$mediaItem->file_name}";
-                chmod(public_path($mediaItemPath), 0755);
+                chmod($mediaItemPath, 0755);
             }
             DB::commit();
             return true;
