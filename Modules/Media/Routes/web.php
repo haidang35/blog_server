@@ -11,6 +11,3 @@
 |
 */
 
-Route::prefix('media')->group(function() {
-    Route::get('/', 'MediaController@index');
-});
