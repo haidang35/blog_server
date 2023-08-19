@@ -38,8 +38,10 @@ class CustomPathGenerator implements PathGenerator
     {
         $prefix = config('media-library.prefix', '');
 
+        $site = $media->site->domain;
+
         if ($prefix !== '') {
-            return $prefix . '/localhost/' . $media->uuid;
+            return $prefix . "/{$site}/" . $media->uuid;
         }
 
         return $media->uuid;

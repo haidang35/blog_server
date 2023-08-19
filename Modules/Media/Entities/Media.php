@@ -4,6 +4,7 @@ namespace Modules\Media\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Base\Traits\HandleFilterRecord;
+use Modules\Site\Entities\Site;
 use Spatie\MediaLibrary\MediaCollections\Models\Media as BaseMedia;
 
 class Media extends BaseMedia
@@ -17,5 +18,10 @@ class Media extends BaseMedia
     protected static function newFactory()
     {
         return \Modules\Media\Database\factories\MediaFactory::new();
+    }
+
+    public function site()
+    {
+        return $this->belongsTo(Site::class, self::MODEL_ID, Site::ID);
     }
 }
