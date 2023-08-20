@@ -12,6 +12,7 @@ use Modules\Media\Http\Requests\GetMediaItemsRequest;
 use Modules\Media\Repositories\Media\IMediaRepository;
 use Modules\Media\Traits\HandleMediaFiles;
 use Modules\Site\Entities\Site;
+use Spatie\MediaLibrary\MediaCollections\FileAdder;
 
 class MediaService implements IMediaService
 {
@@ -41,19 +42,19 @@ class MediaService implements IMediaService
             foreach ($request->images as $key => $image) {
                 $requestFileNames[] = "images[{$key}]";
             }
+            $fileNames = [];
             $mediaItem = $site->addMultipleMediaFromRequest($requestFileNames)
-                ->each(function ($fileAdder) {
+                ->each(function ($fileAdder, $key) use ($request) {
+                    $extension = $request->images[$key]->extension();
+                    $fileName = Str::uuid() . '.' . $extension;
+                    $fileNames[] = $fileName;
                     $fileAdder
+                        ->usingFileName($fileName)
                         ->toMediaCollection();
                 });
-//            foreach ($request->images as $file) {
-//                $imageName = Str::random(48) . '.' . $file->extension();
-//                $imagePath = public_path("media/temp/{$imageName}");
-//                $file->move(public_path('media/temp'), $imageName);
-//                $mediaItem = $site->addMedia($imagePath)
-//                    ->usingName($file->getClientOriginalName())
-//                    ->withCustomProperties([]);
-//            }
+            foreach($fileNames as $fName) {
+                chmod($fName, 0755);
+            }
             DB::commit();
             return true;
         } catch (\Exception $e) {
