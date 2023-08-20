@@ -16,6 +16,7 @@ use Modules\Site\Entities\Site;
 class MediaService implements IMediaService
 {
     use HandleMediaFiles;
+
     public function __construct(protected IMediaRepository $mediaRepository)
     {
     }
@@ -36,19 +37,28 @@ class MediaService implements IMediaService
         DB::beginTransaction();
         try {
             $site = Site::firstOrFail();
-            foreach ($request->images as $file) {
-                $imageName = Str::random(48) . '.' . $file->extension();
-                $imagePath = public_path("media/uploads/{$imageName}");
-                $file->move(public_path('media/uploads'), $imageName);
+            $requestFileNames = [];
+            foreach ($request->images as $key => $image) {
+                $requestFileNames[] = "images[{$key}]";
+            }
+            $mediaItem = $site->addMultipleMediaFromRequest($requestFileNames)
+                ->each(function ($fileAdder) {
+                    $fileAdder
+                        ->toMediaCollection();
+                });
+//            foreach ($request->images as $file) {
+//                $imageName = Str::random(48) . '.' . $file->extension();
+//                $imagePath = public_path("media/temp/{$imageName}");
+//                $file->move(public_path('media/temp'), $imageName);
 //                $mediaItem = $site->addMedia($imagePath)
 //                    ->usingName($file->getClientOriginalName())
-//                    ->withCustomProperties([])
-//                    ->toMediaCollection();
-            }
+//                    ->withCustomProperties([]);
+//            }
             DB::commit();
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
+            dd($e);
             return false;
         }
     }
@@ -59,7 +69,7 @@ class MediaService implements IMediaService
             $site = Site::firstOrFail();
             $mediaItem = $site->mediaItems()->findOrFail($id)->delete();
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -70,11 +80,11 @@ class MediaService implements IMediaService
             $site = Site::firstOrFail();
             $mediaItems = $site->mediaItems()->whereIn('id', $ids)->get();
             //For each item to delete both record and file storage
-            foreach($mediaItems as $item) {
+            foreach ($mediaItems as $item) {
                 $item->delete();
             }
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
