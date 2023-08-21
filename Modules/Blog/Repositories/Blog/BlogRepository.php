@@ -18,4 +18,10 @@ class BlogRepository extends BaseRepository implements IBlogRepository
             ->with(['seoMeta'])
             ->findByUUID($id);
     }
+
+    public function findBySlug($slug)
+    {
+        $locale = request()->header(config('client.headers.locale'), config('app.fallback_locale'));
+        return $this->model->where("slug->{$locale}", $slug)->firstOrFail();
+    }
 }

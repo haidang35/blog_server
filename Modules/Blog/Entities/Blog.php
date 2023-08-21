@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Base\Entities\BaseModel;
 use Modules\Base\Traits\HandleFilterRecord;
 use Modules\Base\Traits\HasUUID;
+use Modules\Comment\Traits\HasComments;
 use Modules\Media\Entities\Media;
 use Modules\Media\Entities\ModelHasMedia;
 use Modules\Media\Traits\HandleSaveMedia;
@@ -22,7 +23,7 @@ use Spatie\Translatable\HasTranslations;
 class Blog extends BaseModel implements HasMedia
 {
     use HasFactory, HasTranslations, SoftDeletes, InteractsWithMedia, HandleFilterRecord,
-        HasUUID, HandleSaveMedia, BelongsToSite, HasSEOMeta, HasTranslatableSlug;
+        HasUUID, HandleSaveMedia, BelongsToSite, HasSEOMeta, HasTranslatableSlug, HasComments;
 
     const TABLE_NAME = 'blogs';
     protected $table = self::TABLE_NAME;

@@ -5,7 +5,9 @@ namespace Modules\Blog\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Base\Http\Controllers\ApiController;
+use Modules\Blog\Http\Requests\Public\Blog\AddCommentForBlogRequest;
 use Modules\Blog\Http\Requests\Public\Blog\GetBlogListRequest;
+use Modules\Blog\Http\Requests\Public\Blog\ReplyCommentForBlogRequest;
 use Modules\Blog\Services\Blog\IBlogService;
 
 class BlogController extends ApiController
@@ -26,6 +28,24 @@ class BlogController extends ApiController
         if(!$result) {
             return $this->handleResponse(null, 404, "Not Found");
         }
+        return $this->handleResponse($result);
+    }
+
+    public function getBlogComments($slug)
+    {
+        $result = $this->blogService->getBlogComments($slug);
+        return $this->handleResponse($result);
+    }
+
+    public function postComment(AddCommentForBlogRequest $request)
+    {
+        $result = $this->blogService->postComment($request);
+        return $this->handleResponse($result);
+    }
+
+    public function replyComment(ReplyCommentForBlogRequest $request)
+    {
+        $result = $this->blogService->replyComment($request);
         return $this->handleResponse($result);
     }
 }
