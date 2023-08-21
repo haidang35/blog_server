@@ -3,6 +3,7 @@
 namespace Modules\Blog\Services\Blog;
 
 use Illuminate\Support\Facades\DB;
+use Intervention\Image\Exception\NotFoundException;
 use Modules\Base\Services\BaseService;
 use Modules\Blog\Entities\Blog;
 use Modules\Blog\Http\Requests\Admin\Blog\CreateBlogRequest;
@@ -169,6 +170,21 @@ class BlogService extends BaseService implements IBlogService
     public function findBySlug($slug)
     {
         $blog = Blog::findBySlug($slug);
+        if(!$blog) {
+            throw new NotFoundException();
+        }
+        $blog['seo_meta'] = $blog->seoMeta();
+        $relatedBlogs = Blog::latest()
+            ->select([
+                Blog::ID,
+                Blog::TITLE,
+                Blog::SLUG,
+                Blog::CREATED_AT,
+            ])
+            ->whereNotIn(Blog::ID, [$blog->id])
+            ->take(3)
+            ->get()->toArray();
+        $blog['suggested_blogs'] = $this->formatTranslations($relatedBlogs, [Blog::TITLE, Blog::SLUG]);
         return $this->formatTranslationsForObject($blog->toArray(), [
             Blog::TITLE,
             Blog::DESCRIPTION,

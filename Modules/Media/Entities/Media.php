@@ -31,7 +31,8 @@ class Media extends BaseMedia
      */
     public function getOriginalUrl(): string
     {
-        return route('media.getMediaFile', ['fileName' => $this->file_name]);
+        $appUrl = config('app.url');
+        return  "{$appUrl}/media/storage/{$this->file_name}";
     }
 
     protected function originalUrl(): Attribute
