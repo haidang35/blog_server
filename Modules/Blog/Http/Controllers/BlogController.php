@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use Modules\Base\Http\Controllers\ApiController;
 use Modules\Blog\Http\Requests\Public\Blog\AddCommentForBlogRequest;
 use Modules\Blog\Http\Requests\Public\Blog\GetBlogListRequest;
+use Modules\Blog\Http\Requests\Public\Blog\LikeCommentRequest;
 use Modules\Blog\Http\Requests\Public\Blog\ReplyCommentForBlogRequest;
 use Modules\Blog\Services\Blog\IBlogService;
 
@@ -46,6 +47,12 @@ class BlogController extends ApiController
     public function replyComment(ReplyCommentForBlogRequest $request)
     {
         $result = $this->blogService->replyComment($request);
+        return $this->handleResponse($result);
+    }
+
+    public function likeComment(LikeCommentRequest $request)
+    {
+        $result = $this->blogService->likeComment($request);
         return $this->handleResponse($result);
     }
 }

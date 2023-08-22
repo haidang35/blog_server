@@ -9,4 +9,5 @@ Route::prefix('blogs')->name('public.blogs.')->controller(BlogController::class)
    Route::get('/{slug}/comments', 'getBlogComments')->name('getBlogComments');
    Route::post('/{slug}/comments', 'postComment')->name('postComment');
    Route::post('/{slug}/comments/{commentId}/replies', 'replyComment')->name('replyComment');
+   Route::post('/{slug}/comments/{commentId}/like', 'likeComment')->name('likeComment');
 });

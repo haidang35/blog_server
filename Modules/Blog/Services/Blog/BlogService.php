@@ -211,13 +211,14 @@ class BlogService extends BaseService implements IBlogService
     public function replyComment(ReplyCommentForBlogRequest $request)
     {
         $blog = Blog::findBySlug($request->slug);
-        $reply = $blog->replyComment($request->comment_id, [
+        $reply = $blog->replyComment($request->parent_id, [
             Comment::NAME => $request->name,
             Comment::WEBSITE => $request->website,
             Comment::EMAIL => $request->email,
             Comment::CONTENT => $request->get('content'),
             Comment::MODEL_ID => $blog->id,
             Comment::PARENT_ID => $request->parent_id,
+            Comment::REPLY_ID => $request->comment_id,
         ]);
         return $reply;
     }
@@ -226,5 +227,16 @@ class BlogService extends BaseService implements IBlogService
     {
         $blog = $this->blogRepository->findBySlug($slug);
         return $blog->rootComments()->with(['replies'])->get();
+    }
+
+    public function likeComment($request)
+    {
+        $blog = $this->blogRepository->findBySlug($request->slug);
+        if($request->reaction == 'like') {
+            $blog->likeComment($request->comment_id);
+        }else {
+            $blog->unlikeComment($request->comment_id);
+        }
+        return true;
     }
 }

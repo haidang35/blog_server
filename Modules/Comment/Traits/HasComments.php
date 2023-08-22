@@ -30,4 +30,18 @@ trait HasComments
     {
         return $this->comments()->where(Comment::REPLY_ID, 0);
     }
+
+    public function likeComment($commentId)
+    {
+        return $this->comments()->findOrFail($commentId)->increment(Comment::TOTAL_LIKE);
+    }
+
+    public function unlikeComment($commentId)
+    {
+        $comment = $this->comments()->findOrFail($commentId);
+        if($comment->total_like > 0) {
+            return $comment->decrement(Comment::TOTAL_LIKE);
+        }
+        return false;
+    }
 }

@@ -9,6 +9,7 @@ use Modules\Blog\Http\Requests\Admin\Blog\GetBlogDetailsRequest;
 use Modules\Blog\Http\Requests\Admin\Blog\GetBlogListRequest;
 use Modules\Blog\Http\Requests\Admin\Blog\UpdateBlogRequest;
 use Modules\Blog\Http\Requests\Public\Blog\AddCommentForBlogRequest;
+use Modules\Blog\Http\Requests\Public\Blog\LikeCommentRequest;
 use Modules\Blog\Http\Requests\Public\Blog\ReplyCommentForBlogRequest;
 
 interface IBlogService
@@ -33,4 +34,6 @@ interface IBlogService
     public function postComment(AddCommentForBlogRequest $request);
 
     public function replyComment(ReplyCommentForBlogRequest $request);
+
+    public function likeComment(LikeCommentRequest $request);
 }
